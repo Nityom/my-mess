@@ -114,7 +114,7 @@ export default function SetupPage({ store, showToast }) {
       </div>
       
       <button 
-        className="w-full p-3.5 rounded-[14px] border-none bg-accent text-[#0f0f13] font-sans font-extrabold text-base cursor-pointer transition-all duration-200 mt-1 hover:brightness-110 hover:-translate-y-[1px] hover:shadow-[0_8px_28px_rgba(192,132,252,0.3)]"
+        className="w-full p-3.5 rounded-[14px] border-none bg-accent text-white font-sans font-extrabold text-base cursor-pointer transition-all duration-200 mt-1 hover:brightness-110 hover:-translate-y-[1px] hover:shadow-[0_8px_28px_rgba(192,132,252,0.3)]"
         onClick={handleStart}
       >
         Start Tracking →

@@ -150,7 +150,7 @@ export default function HomePage({ store, showToast, nav }) {
         {showDatePicker && (
           <div className="flex mb-3 gap-2 items-center">
             <input type="date" className="flex-1 bg-bg border border-border rounded-lg px-3 py-2 text-tx font-mono text-[13px] outline-none focus:border-accent" value={tempDate} max={todayStr()} min={state.startDate || ''} onChange={e => setTempDate(e.target.value)} />
-            <button className="px-3.5 py-2 rounded-lg border-none bg-accent text-[#0f0f13] font-sans font-bold text-xs cursor-pointer" onClick={handleSetDate}>Set</button>
+            <button className="px-3.5 py-2 rounded-lg border-none bg-accent text-white font-sans font-bold text-xs cursor-pointer" onClick={handleSetDate}>Set</button>
           </div>
         )}
 
@@ -198,7 +198,7 @@ export default function HomePage({ store, showToast, nav }) {
             value={payAmt} 
             onChange={e => setPayAmt(e.target.value)} 
           />
-          <button className="bg-green text-[#0f0f13] border-none rounded-xl px-[18px] py-2.5 font-sans font-bold text-sm cursor-pointer transition-all duration-200 whitespace-nowrap hover:brightness-110 hover:-translate-y-[1px]" onClick={addPayment}>Pay</button>
+          <button className="bg-green text-white border-none rounded-xl px-[18px] py-2.5 font-sans font-bold text-sm cursor-pointer transition-all duration-200 whitespace-nowrap hover:brightness-110 hover:-translate-y-[1px]" onClick={addPayment}>Pay</button>
         </div>
         <div className="flex gap-1.5 flex-wrap mt-2.5">
           {quickPays().map(a => (
