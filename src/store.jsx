@@ -8,6 +8,7 @@ const defaultState = {
   cycleName: '',
   startDate: '', // ISO string
   openingDue: 0,
+  cycles: 1,
   entries: [] // {type:'meal'|'absent'|'pay', meal?:'Lunch'|'Dinner', amount, date, ts}
 };
 
@@ -30,7 +31,9 @@ export function useStore() {
     const r = localStorage.getItem(KEY);
     if (r) {
       try {
-        return { ...defaultState, ...JSON.parse(r) };
+        const parsed = JSON.parse(r);
+        parsed.cycles = parsed.cycles || 1;
+        return { ...defaultState, ...parsed };
       } catch (e) {
         console.error(e);
       }
@@ -55,6 +58,13 @@ export function useStore() {
     }));
   };
 
+  const renewCycle = () => {
+    setState((prev) => ({
+      ...prev,
+      cycles: (prev.cycles || 1) + 1
+    }));
+  };
+
   const resetAll = () => {
     localStorage.removeItem(KEY);
     setState(defaultState);
@@ -66,7 +76,7 @@ export function useStore() {
   const daysVisited = () => new Set(state.entries.filter(e => e.type === 'meal').map(e => e.date)).size;
   const absentDays = () => state.entries.filter(e => e.type === 'absent').length;
   const mealCnt = (type) => state.entries.filter(e => e.type === 'meal' && e.meal === type).length;
-  const totalCharge = () => round2(state.entries.filter(e => e.type === 'meal').reduce((s, e) => s + e.amount, 0));
+  const totalCharge = () => round2((state.planDetails?.charge || 2100) * (state.cycles || 1));
   const totalBill = () => round2(totalCharge() + state.openingDue);
   const totalPaid = () => round2(state.entries.filter(e => e.type === 'pay').reduce((s, e) => s + e.amount, 0));
   const balanceDue = () => round2(Math.max(0, totalBill() - totalPaid()));
@@ -77,6 +87,7 @@ export function useStore() {
     setActiveDate,
     setSetup,
     addEntry,
+    renewCycle,
     resetAll,
     getMealsOnDate,
     isAbsentDate,

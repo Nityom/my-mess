@@ -5,6 +5,7 @@ export default function SummaryPage({ store, showModal }) {
   
   const p = state.planDetails || { name: '1 Meal/Day', charge: 2100, cycleDays: 30, mealsPerDay: 1, ratePerMeal: 70 };
   const visited = daysVisited();
+  const maxDays = p.cycleDays * (state.cycles || 1);
 
   return (
     <div className="pt-5 pb-6">
@@ -28,7 +29,7 @@ export default function SummaryPage({ store, showModal }) {
         </div>
         <div className="flex justify-between items-center py-2.5 px-3.5 bg-s1 border border-border rounded-xl mb-1.5 last:mb-0">
           <span className="text-xs text-muted2">Cycle Days Remaining</span>
-          <span className="font-sans font-bold text-sm text-blue">{Math.max(0, p.cycleDays - visited)}</span>
+          <span className="font-sans font-bold text-sm text-blue">{Math.max(0, maxDays - visited)}</span>
         </div>
       </div>
 
@@ -39,8 +40,12 @@ export default function SummaryPage({ store, showModal }) {
           <span className="font-sans font-bold text-sm text-yellow">{p.name}</span>
         </div>
         <div className="flex justify-between items-center py-2.5 px-3.5 bg-s1 border border-border rounded-xl mb-1.5 last:mb-0">
-          <span className="text-xs text-muted2">Rate per Meal</span>
-          <span className="font-sans font-bold text-sm">₹{round2(p.ratePerMeal)}/meal</span>
+          <span className="text-xs text-muted2">Active Cycles</span>
+          <span className="font-sans font-bold text-sm">{state.cycles || 1}</span>
+        </div>
+        <div className="flex justify-between items-center py-2.5 px-3.5 bg-s1 border border-border rounded-xl mb-1.5 last:mb-0">
+          <span className="text-xs text-muted2">Base Plan Charge</span>
+          <span className="font-sans font-bold text-sm">₹{p.charge}</span>
         </div>
         <div className="flex justify-between items-center py-2.5 px-3.5 bg-s1 border border-border rounded-xl mb-1.5 last:mb-0">
           <span className="text-xs text-muted2">Meal Charges</span>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { todayStr, fmtDate, round2 } from '../store';
 
 export default function HomePage({ store, showToast, nav }) {
-  const { state, activeDate, setActiveDate, addEntry, getMealsOnDate, isAbsentDate, daysVisited, totalBill, totalPaid, balanceDue } = store;
+  const { state, activeDate, setActiveDate, addEntry, getMealsOnDate, isAbsentDate, daysVisited, totalBill, totalPaid, balanceDue, renewCycle } = store;
   
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [tempDate, setTempDate] = useState(activeDate);
@@ -10,10 +10,11 @@ export default function HomePage({ store, showToast, nav }) {
 
   const p = state.planDetails || { name: '1 Meal/Day', charge: 2100, cycleDays: 30, mealsPerDay: 1, ratePerMeal: 70 };
   const visited = daysVisited();
+  const maxDays = p.cycleDays * (state.cycles || 1);
   const bill = totalBill();
   const paid = totalPaid();
   const due = balanceDue();
-  const pct = Math.min(1, visited / p.cycleDays);
+  const pct = Math.min(1, visited / maxDays);
   
   const isToday = activeDate === todayStr();
   const meals = getMealsOnDate(activeDate);
@@ -42,7 +43,7 @@ export default function HomePage({ store, showToast, nav }) {
     const amount = round2(p.ratePerMeal);
     addEntry({ type: 'meal', meal, amount, date: activeDate });
     showToast(`✅ ${meal} logged — ₹${amount}`);
-    if (visited + 1 >= p.cycleDays) setTimeout(() => showToast('🎉 Cycle complete! 30 days done.'), 800);
+    if (visited + 1 >= maxDays) setTimeout(() => showToast('🎉 Cycle days complete!'), 800);
   };
 
   const logAbsent = () => {
@@ -84,13 +85,13 @@ export default function HomePage({ store, showToast, nav }) {
           <h1 className="font-sans font-extrabold text-2xl tracking-[-0.5px]">Daily <span className="text-accent">Log</span></h1>
         </div>
         <div className="bg-s1 border border-border rounded-full px-3.5 py-1.5 text-[11px] text-muted2 text-center leading-[1.4] cursor-pointer transition-colors duration-200 hover:border-accent" onClick={() => nav('summary')} title="View summary">
-          <strong className="block text-[15px] text-accent font-sans font-bold">{visited}/{p.cycleDays}</strong>
+          <strong className="block text-[15px] text-accent font-sans font-bold">{visited}/{maxDays}</strong>
           <span>{state.cycleName}</span>
         </div>
       </div>
 
       <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium mb-3 border ${p.mealsPerDay === 2 ? 'bg-accent/10 text-accent border-accent/30' : 'bg-accent2/10 text-accent2 border-accent2/30'}`}>
-        {p.mealsPerDay === 2 ? '🌅🌙  2 Meal Plan' : '☀️  1 Meal Plan'} · ₹{round2(p.ratePerMeal)}/{p.mealsPerDay === 2 ? 'meal' : 'day'}
+        {p.mealsPerDay === 2 ? '🌅🌙  2 Meal Plan' : '☀️  1 Meal Plan'} · ₹{p.charge}/{p.cycleDays} days
       </div>
 
       <div className="bg-s1 border border-border rounded-[20px] p-[18px] mb-3 flex items-center gap-[18px]">
@@ -110,6 +111,24 @@ export default function HomePage({ store, showToast, nav }) {
           <div className="flex justify-between items-baseline"><span className="text-[10px] text-muted">Balance Due</span><span className="font-sans font-bold text-[15px] text-red">₹{due}</span></div>
         </div>
       </div>
+
+      {visited >= maxDays && (
+        <div className="bg-blue/10 border border-blue/30 rounded-[20px] p-4 mb-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+          <div>
+            <div className="font-sans font-bold text-[14px] text-blue mb-1">Cycle Days Completed!</div>
+            <div className="text-[11px] text-blue/80">You have logged all {maxDays} valid days for this cycle limit.</div>
+          </div>
+          <button 
+            className="shrink-0 bg-blue text-white border-none rounded-xl px-4 py-2 font-sans font-bold text-xs cursor-pointer hover:brightness-110"
+            onClick={() => {
+              renewCycle();
+              showToast(`✅ Renewed! Extra ${p.cycleDays} days added.`);
+            }}
+          >
+            Renew Cycle (+₹{p.charge})
+          </button>
+        </div>
+      )}
 
       <div className="bg-s1 border border-border rounded-[20px] p-4 mb-3">
         <div className="flex justify-between items-center mb-3 gap-2 flex-wrap">
