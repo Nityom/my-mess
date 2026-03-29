@@ -3,7 +3,7 @@ import { todayStr, fmtDate, round2 } from '../store';
 
 export default function HomePage({ store, showToast, nav }) {
   const { state, activeDate, setActiveDate, addEntry, getMealsOnDate, isAbsentDate, daysVisited, totalBill, totalPaid, balanceDue, renewCycle } = store;
-  
+
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [tempDate, setTempDate] = useState(activeDate);
   const [payAmt, setPayAmt] = useState('');
@@ -15,7 +15,7 @@ export default function HomePage({ store, showToast, nav }) {
   const paid = totalPaid();
   const due = balanceDue();
   const pct = Math.min(1, visited / maxDays);
-  
+
   const isToday = activeDate === todayStr();
   const meals = getMealsOnDate(activeDate);
   const absent = isAbsentDate(activeDate);
@@ -81,7 +81,7 @@ export default function HomePage({ store, showToast, nav }) {
     <div className="py-5">
       <div className="flex items-center justify-between pb-3.5 pt-5">
         <div>
-          <div className="text-[10px] tracking-[3px] text-accent uppercase mb-[3px]">🍽 Mess Tracker</div>
+          <div className="text-[10px] tracking-[3px] text-accent uppercase mb-[3px] flex items-center gap-1.5"><img src="/logo.jpg" alt="logo" className="w-[14px] h-[14px] object-contain inline-block -mt-[2px]" /> Mess Tracker</div>
           <h1 className="font-sans font-extrabold text-2xl tracking-[-0.5px]">Daily <span className="text-accent">Log</span></h1>
         </div>
         <div className="bg-s1 border border-border rounded-full px-3.5 py-1.5 text-[11px] text-muted2 text-center leading-[1.4] cursor-pointer transition-colors duration-200 hover:border-accent" onClick={() => nav('summary')} title="View summary">
@@ -118,7 +118,7 @@ export default function HomePage({ store, showToast, nav }) {
             <div className="font-sans font-bold text-[14px] text-blue mb-1">Cycle Days Completed!</div>
             <div className="text-[11px] text-blue/80">You have logged all {maxDays} valid days for this cycle limit.</div>
           </div>
-          <button 
+          <button
             className="shrink-0 bg-blue text-white border-none rounded-xl px-4 py-2 font-sans font-bold text-xs cursor-pointer hover:brightness-110"
             onClick={() => {
               renewCycle();
@@ -155,7 +155,7 @@ export default function HomePage({ store, showToast, nav }) {
         )}
 
         <div className="grid grid-cols-3 gap-2">
-          <button 
+          <button
             className={`border border-accent2/25 rounded-[14px] p-3.5 pb-[14px] pt-[14px] cursor-pointer transition-all duration-150 flex flex-col items-center gap-[5px] font-mono bg-accent2/10 text-accent2 hover:bg-accent2/20 hover:border-accent2/50 hover:-translate-y-[2px] active:scale-95 ${absent || meals.includes('Lunch') || (p.mealsPerDay === 1 && meals.length >= 1) ? 'opacity-40 pointer-events-none' : ''}`}
             onClick={() => logMeal('Lunch')}
           >
@@ -163,7 +163,7 @@ export default function HomePage({ store, showToast, nav }) {
             <span className="text-[11px] font-medium tracking-[0.5px]">LUNCH</span>
             <span className="text-[10px] opacity-75">₹{round2(p.ratePerMeal)}</span>
           </button>
-          <button 
+          <button
             className={`border border-accent/25 rounded-[14px] p-3.5 pb-[14px] pt-[14px] cursor-pointer transition-all duration-150 flex flex-col items-center gap-[5px] font-mono bg-accent/10 text-accent hover:bg-accent/20 hover:border-accent/50 hover:-translate-y-[2px] active:scale-95 ${absent || meals.includes('Dinner') || (p.mealsPerDay === 1 && meals.length >= 1) ? 'opacity-40 pointer-events-none' : ''}`}
             onClick={() => logMeal('Dinner')}
           >
@@ -171,7 +171,7 @@ export default function HomePage({ store, showToast, nav }) {
             <span className="text-[11px] font-medium tracking-[0.5px]">DINNER</span>
             <span className="text-[10px] opacity-75">₹{round2(p.ratePerMeal)}</span>
           </button>
-          <button 
+          <button
             className={`border border-red/20 rounded-[14px] p-3.5 pb-[14px] pt-[14px] cursor-pointer transition-all duration-150 flex flex-col items-center gap-[5px] font-mono bg-red/10 text-red hover:bg-red/15 hover:border-red/40 hover:-translate-y-[2px] active:scale-95 ${meals.length > 0 || absent ? 'opacity-40 pointer-events-none' : ''}`}
             onClick={logAbsent}
           >
@@ -180,7 +180,7 @@ export default function HomePage({ store, showToast, nav }) {
             <span className="text-[10px] opacity-75">no charge</span>
           </button>
         </div>
-        
+
         <div className="mt-2.5 px-3 py-2 bg-bg border border-border rounded-xl flex items-center gap-2 text-xs text-muted2 min-h-[36px]">
           <div className={`w-[6px] h-[6px] rounded-full shrink-0 ${status.dot}`}></div>
           <span>{status.txt}</span>
@@ -190,13 +190,13 @@ export default function HomePage({ store, showToast, nav }) {
       <div className="bg-s1 border border-border rounded-[20px] p-4 mb-3">
         <div className="font-sans font-bold text-[15px] mb-3">💳 Record Payment</div>
         <div className="flex gap-2">
-          <input 
-            className="flex-1 bg-bg border border-border rounded-xl px-3.5 py-2.5 text-tx font-mono text-base outline-none transition-all duration-200 focus:border-green focus:shadow-[0_0_0_3px_rgba(74,222,128,0.12)] appearance-none placeholder-muted" 
-            type="number" 
-            placeholder="Amount (₹)" 
-            min="1" 
-            value={payAmt} 
-            onChange={e => setPayAmt(e.target.value)} 
+          <input
+            className="flex-1 bg-bg border border-border rounded-xl px-3.5 py-2.5 text-tx font-mono text-base outline-none transition-all duration-200 focus:border-green focus:shadow-[0_0_0_3px_rgba(74,222,128,0.12)] appearance-none placeholder-muted"
+            type="number"
+            placeholder="Amount (₹)"
+            min="1"
+            value={payAmt}
+            onChange={e => setPayAmt(e.target.value)}
           />
           <button className="bg-green text-white border-none rounded-xl px-[18px] py-2.5 font-sans font-bold text-sm cursor-pointer transition-all duration-200 whitespace-nowrap hover:brightness-110 hover:-translate-y-[1px]" onClick={addPayment}>Pay</button>
         </div>
